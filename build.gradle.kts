@@ -12,7 +12,7 @@ val minecraft_version_range: String by project
 val neo_version: String by project
 val neo_version_range: String by project
 val loader_version_range: String by project
-val mod_id = property("mod_id") as String
+val mod_id: String by project
 val mod_name: String by project
 val mod_version: String by project
 val mod_authors: String by project
@@ -47,7 +47,7 @@ neoForge {
 
     runs {
         configureEach {
-            sourceSet = sourceSets["main"]
+            sourceSet = sourceSets.main
         }
 
         create("client") {

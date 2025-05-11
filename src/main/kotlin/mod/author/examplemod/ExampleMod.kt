@@ -4,9 +4,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import net.neoforged.bus.api.SubscribeEvent
+import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.fml.common.Mod
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
-import org.error1015.dragonloot.block.ModBlocks
+import mod.author.examplemod.block.ModBlocks
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 import kotlin.time.Duration.Companion.seconds
 
@@ -14,14 +16,15 @@ const val ID = "examplemod"
 const val NAME = "Example Mod"
 
 @Mod(ID)
-object ExampleModMain {
+@EventBusSubscriber(modid = ID)
+object ExampleMod {
     val scope = CoroutineScope(Dispatchers.Default)
 
     init {
         ModBlocks.BLOCKS.register(MOD_BUS)
-        MOD_BUS.addListener(::onClientSetup)
     }
 
+    @SubscribeEvent
     fun onClientSetup(event: FMLClientSetupEvent) {
         scope.launch {
             println("Hello Minecraft ! from $NAME")
