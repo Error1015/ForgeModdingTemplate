@@ -16,7 +16,7 @@ const val ID = "examplemod"
 const val NAME = "Example Mod"
 
 @Mod(ID)
-@EventBusSubscriber(modid = ID)
+@EventBusSubscriber(modid = ID, bus = EventBusSubscriber.Bus.MOD)
 object ExampleMod {
     val scope = CoroutineScope(Dispatchers.Default)
 
