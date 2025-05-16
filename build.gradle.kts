@@ -46,16 +46,12 @@ neoForge {
     // accessTransformers.add('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
-        configureEach {
-            sourceSet = sourceSets.main
-        }
-
         create("client") {
             client()
             gameDirectory = file("run")
             systemProperties.putAll(
                 mapOf(
-                    "forge.logging.markers" to "REGISTRIES", "forge.logging.console.level" to "debug"
+                    // "forge.logging.markers" to "REGISTRIES", "forge.logging.console.level" to "debug"
                 )
             )
         }
