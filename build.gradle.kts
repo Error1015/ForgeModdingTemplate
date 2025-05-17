@@ -1,3 +1,5 @@
+import org.slf4j.event.Level
+
 plugins {
     java
     idea
@@ -48,33 +50,31 @@ neoForge {
     runs {
         create("client") {
             client()
-            gameDirectory = file("run")
-            systemProperties.putAll(
-                mapOf(
-                    // "forge.logging.markers" to "REGISTRIES", "forge.logging.console.level" to "debug"
-                )
-            )
         }
 
         create("server") {
             server()
-            gameDirectory = file("run/server")
             programArgument("--nogui")
-            systemProperty("neoforge.enabledGameTestNamespaces", mod_id)
         }
 
         create("gameTestServer") {
             type = "gameTestServer"
-            gameDirectory = file("run/server")
-            systemProperty("neoforge.enabledGameTestNamespaces", mod_id)
         }
 
         create("data") {
             data()
-            gameDirectory = file("run")
             programArguments.addAll(
                 "--mod", mod_id, "--all", "--output", file("src/generated/resources/").absolutePath, "--existing", file("src/main/resources/").absolutePath
             )
+        }
+
+        configureEach {
+            if (name != "data") {
+                systemProperty("neoforge.enabledGameTestNamespaces", mod_id)
+            }
+
+            systemProperty("forge.logging.markers", "REGISTRIES")
+            logLevel = Level.DEBUG
         }
     }
 }
@@ -101,7 +101,7 @@ repositories {
 
 dependencies {
     implementation("net.neoforged:neoforge:$neo_version")
-    implementation("thedarkcolour:kotlinforforge-neoforge:${kff_version}")
+    implementation("thedarkcolour:kotlinforforge-neoforge:$kff_version")
 }
 
 java {
@@ -118,26 +118,21 @@ kotlin {
     }
 }
 
-tasks.withType<ProcessResources>().configureEach {
-    val replaceProperties = mapOf(
-        "minecraft_version" to minecraft_version,
-        "minecraft_version_range" to minecraft_version_range,
-        "neo_version" to neo_version,
-        "neo_version_range" to neo_version_range,
-        "loader_version_range" to loader_version_range,
-        "mod_id" to mod_id,
-        "mod_name" to mod_name,
-        "mod_license" to mod_license,
-        "mod_version" to mod_version,
-        "mod_authors" to mod_authors,
-        "mod_description" to mod_description
-    )
-    inputs.properties(replaceProperties)
+tasks
+    .withType<ProcessResources>()
+    .configureEach {
+        val replaceProperties = mapOf(
+            "minecraft_version" to minecraft_version, "minecraft_version_range" to minecraft_version_range, "neo_version" to neo_version, "neo_version_range" to neo_version_range,
+            "loader_version_range" to loader_version_range, "mod_id" to mod_id, "mod_name" to mod_name, "mod_license" to mod_license, "mod_version" to mod_version, "mod_authors" to mod_authors,
+            "mod_description" to mod_description
+        )
+        inputs.properties(replaceProperties)
 
-    filesMatching(listOf("META-INF/neoforge.mods.toml")) {
-        expand(replaceProperties)
+        filesMatching(listOf("META-INF/neoforge.mods.toml")) {
+            expand(replaceProperties)
+        }
     }
-}
+
 
 publishing {
     publications {
@@ -150,6 +145,10 @@ publishing {
             mavenLocal()
         }
     }
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    options.encoding = "UTF-8"
 }
 
 idea {
