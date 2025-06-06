@@ -1,4 +1,4 @@
-package org.error1015.dragonloot.block
+package mod.author.examplemod.block
 
 import mod.author.examplemod.ID
 import net.minecraft.world.level.block.Block

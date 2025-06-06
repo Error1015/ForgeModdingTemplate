@@ -6,6 +6,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
+import mod.author.examplemod.block.ModBlocks
 import thedarkcolour.kotlinforforge.forge.MOD_BUS
 import kotlin.time.Duration.Companion.seconds
 
@@ -17,6 +18,7 @@ object ExampleModMain {
     val scope = CoroutineScope(Dispatchers.Default)
 
     init {
+        ModBlocks.BLOCKS.register(MOD_BUS)
         MOD_BUS.addListener(::onCommonSetup)
     }
 
@@ -29,5 +31,6 @@ object ExampleModMain {
 
             println("Can you see me?")
         }
+
     }
 }

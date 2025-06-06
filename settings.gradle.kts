@@ -24,5 +24,3 @@ pluginManagement {
 }
 
 rootProject.name = "ForgeModdingTemplate-1.20.1"
-
-include("Forge-1.20.1")
